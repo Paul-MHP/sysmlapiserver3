@@ -58,5 +58,5 @@ ENV JAVA_OPTS="-Xmx1024m -Xms512m"
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:9000/ || exit 1
 
-# Start the application with Docker configuration
-CMD ["./bin/sysml-v2-api-services", "-Dconfig.file=conf/application-docker.conf"]
+# Start the application with Docker configuration and database system properties from environment variables
+CMD ["sh", "-c", "./bin/sysml-v2-api-services -Dconfig.file=conf/application-docker.conf -Ddb.url=jdbc:postgresql://${DB_HOST:-postgres}:${DB_PORT:-5432}/${DB_NAME:-sysml2}?sslmode=require -Ddb.user=${DB_USER:-postgres} -Ddb.password=${DB_PASSWORD:-mysecretpassword}"]

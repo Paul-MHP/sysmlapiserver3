@@ -98,7 +98,7 @@ az keyvault secret set --vault-name $KEYVAULT_NAME \
 az keyvault secret set --vault-name $KEYVAULT_NAME \
   --name "db-name" --value "sysml2"
 az keyvault secret set --vault-name $KEYVAULT_NAME \
-  --name "db-user" --value "postgres"
+  --name "db-user" --value "paulschiel"
 az keyvault secret set --vault-name $KEYVAULT_NAME \
   --name "db-password" --value "$DB_PASSWORD"
 az keyvault secret set --vault-name $KEYVAULT_NAME \
@@ -113,8 +113,8 @@ az keyvault secret set --vault-name $KEYVAULT_NAME \
 ACR_NAME="sysmlacr2024"  # Your Container Registry name
 
 # Clone your GitHub repository
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
+git clone https://github.com/Paul-MHP/sysmlapiserver3.git
+cd sysmlapiserver3
 
 # Login to your Azure Container Registry
 az acr login --name $ACR_NAME
@@ -127,152 +127,99 @@ az acr build --registry $ACR_NAME \
 # Alternatively, if you want to build from a GitHub repo directly:
 # az acr build --registry $ACR_NAME \
 #   --image sysml-api:latest \
-#   https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+#   https://github.com/Paul-MHP/sysmlapiserver3.git
 ```
 
-## Phase 5: Create Container Apps Environment via UI
+## Phase 5: Deploy with Azure Container Instances (ACI)
 
-### 9. Create Container Apps Environment
-1. Go to **Azure Portal** → **Container Apps** → **Create**
-2. On **Basics** tab:
-   - **Resource group**: `287013_Scalable_AI_Applications`
-   - **Container app name**: `sysml-api`
-   - **Region**: West Europe
-3. On **Container Apps Environment**:
-   - Select **Create new**
-   - **Environment name**: `sysml-env`
-4. Continue to **App settings** tab without completing the container app creation yet
+### 9. Deploy Container Instance via Cloud Shell
+Due to permission restrictions with Container Apps, we'll use Azure Container Instances (ACI) instead, which provides simpler deployment without autoscaling.
 
-## Phase 6: Deploy Container App via Cloud Shell
-
-### 10. Deploy the Application via Cloud Shell
+**Step 1: Basic Container Deployment**
 ```bash
-# Replace these with your actual resource names
-RESOURCE_GROUP="287013_Scalable_AI_Applications"
-ACR_NAME="sysmlacr2024"  # Your Container Registry name
-KEYVAULT_NAME="sysml-kv-2024"  # Your Key Vault name
-CONTAINER_ENV="sysml-env"
-CONTAINER_APP="sysml-api"
-
-# Get ACR details
-ACR_SERVER=$(az acr show --name $ACR_NAME --query loginServer --output tsv)
-ACR_USERNAME=$(az acr credential show --name $ACR_NAME --query username --output tsv)
-ACR_PASSWORD=$(az acr credential show --name $ACR_NAME --query passwords[0].value --output tsv)
-
-# Create the container app
-az containerapp create \
-  --name $CONTAINER_APP \
-  --resource-group $RESOURCE_GROUP \
-  --environment $CONTAINER_ENV \
-  --image $ACR_SERVER/sysml-api:latest \
-  --registry-server $ACR_SERVER \
-  --registry-username $ACR_USERNAME \
-  --registry-password $ACR_PASSWORD \
-  --target-port 9000 \
-  --ingress external \
-  --min-replicas 1 \
-  --max-replicas 10 \
-  --cpu 1.0 \
-  --memory 2Gi \
-  --secrets \
-    "db-host=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/db-host,identityref:system" \
-    "db-port=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/db-port,identityref:system" \
-    "db-name=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/db-name,identityref:system" \
-    "db-user=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/db-user,identityref:system" \
-    "db-password=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/db-password,identityref:system" \
-    "play-secret=keyvaultref:https://$KEYVAULT_NAME.vault.azure.net/secrets/play-http-secret-key,identityref:system" \
-  --env-vars \
-    "DB_HOST=secretref:db-host" \
-    "DB_PORT=secretref:db-port" \
-    "DB_NAME=secretref:db-name" \
-    "DB_USER=secretref:db-user" \
-    "DB_PASSWORD=secretref:db-password" \
-    "PLAY_HTTP_SECRET_KEY=secretref:play-secret" \
-    "JAVA_OPTS=-Xmx1024m -Xms512m"
+# Create basic container instance (save to aci-deploy.txt for easy copying)
+az container create --resource-group "287013_Scalable_AI_Applications" --name "sysml-api-aci" --image "sysmlacr2024.azurecr.io/sysml-api:latest" --registry-login-server "sysmlacr2024.azurecr.io" --registry-username "sysmlacr2024" --registry-password "YOUR_ACR_PASSWORD" --dns-name-label "sysml-api-test" --ports 9000 --cpu 0.25 --memory 0.5 --os-type Linux
 ```
 
-## Phase 7: Configure Security
-
-### 11. Enable System-Assigned Identity via Cloud Shell
+**Step 2: Configure PostgreSQL Firewall**
 ```bash
-# Replace these with your actual resource names
-RESOURCE_GROUP="287013_Scalable_AI_Applications"
-CONTAINER_APP="sysml-api"
-KEYVAULT_NAME="sysml-kv-2024"  # Your Key Vault name
-
-# Enable managed identity
-az containerapp identity assign \
-  --name $CONTAINER_APP \
-  --resource-group $RESOURCE_GROUP \
-  --system-assigned
-
-# Get the managed identity
-CONTAINER_APP_IDENTITY=$(az containerapp identity show \
-  --name $CONTAINER_APP \
-  --resource-group $RESOURCE_GROUP \
-  --query principalId --output tsv)
-
-# Grant Key Vault access
-az keyvault set-policy \
-  --name $KEYVAULT_NAME \
-  --object-id $CONTAINER_APP_IDENTITY \
-  --secret-permissions get list
+# Allow Azure services to connect to PostgreSQL
+az postgres flexible-server firewall-rule create --resource-group "287013_Scalable_AI_Applications" --name "sysml-postgres-2024" --rule-name "AllowAzureServices" --start-ip-address "0.0.0.0" --end-ip-address "255.255.255.255"
 ```
 
-## Phase 8: Verification & Testing
-
-### 12. Get Application URL and Test
+**Step 3: Create Container with Database Connectivity**
 ```bash
-# Replace these with your actual resource names
-RESOURCE_GROUP="287013_Scalable_AI_Applications"
-CONTAINER_APP="sysml-api"
+# Get the Play Framework secret key from Key Vault first
+az keyvault secret show --vault-name "sysml-kv-2024" --name "play-http-secret-key" --query "value" --output tsv
 
-# Get the application URL
-APP_URL=$(az containerapp show \
-  --name $CONTAINER_APP \
-  --resource-group $RESOURCE_GROUP \
-  --query properties.latestRevisionFqdn \
-  --output tsv)
-
-echo "Application URL: https://$APP_URL"
-echo "API Documentation: https://$APP_URL/docs/"
-
-# Test the application
-curl -f "https://$APP_URL/" || echo "Application starting up..."
+# Create container with database environment variables (save to aci-ssl.txt for easy copying)
+az container create --resource-group "287013_Scalable_AI_Applications" --name "sysml-api-ssl" --image "sysmlacr2024.azurecr.io/sysml-api:latest" --registry-login-server "sysmlacr2024.azurecr.io" --registry-username "sysmlacr2024" --registry-password "YOUR_ACR_PASSWORD" --dns-name-label "sysml-api-ssl" --ports 9000 --cpu 0.25 --memory 0.5 --os-type Linux --environment-variables DB_HOST="sysml-postgres-2024.postgres.database.azure.com" DB_PORT="5432" DB_NAME="sysml2" DB_USER="paulschiel" DB_PASSWORD="TestPW123!" PLAY_HTTP_SECRET_KEY="YOUR_PLAY_SECRET_KEY" JAVA_OPTS="-Xmx256m -Xms128m" DATABASE_URL="postgres://paulschiel:TestPW123%21@sysml-postgres-2024.postgres.database.azure.com:5432/sysml2?sslmode=require"
 ```
 
-### 13. Monitor Application Logs
-```bash
-# Replace these with your actual resource names
-RESOURCE_GROUP="287013_Scalable_AI_Applications"
-CONTAINER_APP="sysml-api"
+## Phase 6: Verification & Testing
 
-# View application logs
-az containerapp logs show \
-  --name $CONTAINER_APP \
-  --resource-group $RESOURCE_GROUP \
-  --follow
+### 10. Get Container Instance URL and Test
+```bash
+# Get the container instance details
+az container show \
+  --resource-group "287013_Scalable_AI_Applications" \
+  --name "sysml-api-ssl" \
+  --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState,RestartCount:containers[0].instanceView.restartCount}" \
+  --output table
+
+# The FQDN will be something like: sysml-api-ssl.westeurope.azurecontainer.io
+```
+
+**Access your application:**
+- **Main Application**: `http://sysml-api-ssl.westeurope.azurecontainer.io:9000/`
+- **API Documentation**: `http://sysml-api-ssl.westeurope.azurecontainer.io:9000/docs/`
+
+### 11. Monitor Container Logs and Status
+```bash
+# View container logs
+az container logs \
+  --resource-group "287013_Scalable_AI_Applications" \
+  --name "sysml-api-ssl"
+
+# Check restart count (should be 0 after successful deployment)
+az container show --name "sysml-api-ssl" --resource-group "287013_Scalable_AI_Applications" --query "{State:instanceView.state,RestartCount:containers[0].instanceView.restartCount,ExitCode:containers[0].instanceView.currentState.exitCode}"
 ```
 
 ## Summary
 
-This approach combines the convenience of Azure Portal UI for resource creation with the power of Azure Cloud Shell for configuration and deployment. Key benefits:
+This approach combines Azure Portal UI for infrastructure setup with Azure Container Instances for simple, cost-effective deployment:
 
-- **UI Creation**: Easy visual setup of core resources
-- **Cloud Shell**: Powerful scripting for complex configurations
-- **GitHub Integration**: Direct builds from your repository
-- **Existing Resource Group**: Uses your existing `287013_Scalable_AI_Applications` group
+- **UI Creation**: Easy visual setup of PostgreSQL, Key Vault, and Container Registry
+- **ACI Deployment**: Simple container hosting without complex orchestration
+- **GitHub Integration**: Direct builds from your repository via Azure Container Registry
+- **Cost-Effective**: Minimal resource allocation (0.25 vCPU, 0.5GB RAM)
+- **No Auto-Scaling**: Perfect for testing and low-traffic scenarios
 
-## Next Steps
+## Current Deployment Status
 
-1. Access your application at the URL provided by the Cloud Shell
-2. Test the API endpoints at `/docs/`
-3. Monitor performance and adjust scaling as needed
-4. Set up CI/CD for automatic deployments from GitHub
+**Successfully Deployed Resources:**
+- ✅ **Container Registry**: `sysmlacr2024` with Docker image
+- ✅ **PostgreSQL Database**: `sysml-postgres-2024` with `sysml2` database
+- ✅ **Key Vault**: `sysml-kv-2024` with database credentials and secrets
+- ✅ **Container Instance**: `sysml-api-ssl` with database connectivity
+
+**Application Access:**
+- **Main Application**: `http://sysml-api-ssl.westeurope.azurecontainer.io:9000/`
+- **Swagger API Documentation**: `http://sysml-api-ssl.westeurope.azurecontainer.io:9000/docs/`
 
 ## Troubleshooting
 
-- Check Container Apps logs in Azure Portal under **Log stream**
-- Verify Key Vault access policies if secrets aren't accessible
-- Ensure PostgreSQL firewall rules allow Container Apps access
-- Monitor costs in Azure Cost Management
+**Common Issues Resolved:**
+1. **Container restart loops**: Fixed by adding PostgreSQL firewall rule and proper environment variables
+2. **Database connectivity**: Resolved with SSL connection string and proper credentials
+3. **Bash special characters**: Fixed by URL-encoding `!` character in DATABASE_URL (`%21`)
+4. **Secret key consistency**: Using fixed Key Vault secret instead of random generation
+
+**Monitoring Commands:**
+```bash
+# Check container status
+az container show --name "sysml-api-ssl" --resource-group "287013_Scalable_AI_Applications" --query "{State:instanceView.state,RestartCount:containers[0].instanceView.restartCount}"
+
+# View logs
+az container logs --name "sysml-api-ssl" --resource-group "287013_Scalable_AI_Applications"
+```

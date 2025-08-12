@@ -1,0 +1,1 @@
+az container show --name "db-test" --resource-group "287013_Scalable_AI_Applications" --query "{State:instanceView.state,ExitCode:containers[0].instanceView.currentState.exitCode}"

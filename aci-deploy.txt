@@ -1,0 +1,1 @@
+az container create --resource-group "287013_Scalable_AI_Applications" --name "sysml-api-aci" --image "sysmlacr2024.azurecr.io/sysml-api:latest" --registry-login-server "sysmlacr2024.azurecr.io" --registry-username "sysmlacr2024" --registry-password "YOUR_ACR_PASSWORD" --dns-name-label "sysml-api-test" --ports 9000 --cpu 0.25 --memory 0.5 --os-type Linux

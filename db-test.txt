@@ -1,0 +1,1 @@
+az container create --resource-group "287013_Scalable_AI_Applications" --name "db-test" --image "postgres:13" --restart-policy "Never" --command-line "psql postgresql://paulschiel:TestPW123%21@sysml-postgres-2024.postgres.database.azure.com:5432/sysml2?sslmode=require -c 'SELECT version();'" --cpu 0.25 --memory 0.5 --os-type Linux

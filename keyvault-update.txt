@@ -1,0 +1,1 @@
+az keyvault secret set --vault-name "sysml-kv-2024" --name "db-password" --value "TestPW123!"
