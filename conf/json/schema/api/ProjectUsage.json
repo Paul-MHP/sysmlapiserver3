@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ProjectUsage",
+  "type": "object",
+  "properties": {
+    "@id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "@type": {
+      "type": "string",
+      "const": "ProjectUsage"
+    },
+    "usedCommit": {
+      "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+      "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+    },
+    "usedProject": {
+      "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+      "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Project"
+    }
+  },
+  "required": [
+    "@id",
+    "@type",
+    "usedCommit",
+    "usedProject"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Identified": {
+      "$id": "https://www.omg.org/spec/SysML/20230201/Identified",
+      "title": "Identified",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "@id"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

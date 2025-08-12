@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalData",
+  "type": "object",
+  "properties": {
+    "@id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "@type": {
+      "type": "string",
+      "const": "ExternalData"
+    },
+    "resourceIdentifier": {
+      "type": "string",
+      "format": "uri"
+    }
+  },
+  "required": [
+    "@id",
+    "@type",
+    "resourceIdentifier"
+  ],
+  "additionalProperties": false
+}

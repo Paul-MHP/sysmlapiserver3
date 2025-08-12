@@ -1,0 +1,1297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Project": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Project",
+      "title": "Project",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "Project"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "defaultBranch": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Branch"
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "alias",
+        "created",
+        "defaultBranch",
+        "description",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ProjectRequest",
+      "title": "ProjectRequest",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Project"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "defaultBranch": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Branch"
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Branch": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Branch",
+      "title": "Branch",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "Branch"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "head": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+              "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "owningProject": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Project"
+        },
+        "referencedCommit": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "alias",
+        "created",
+        "deleted",
+        "description",
+        "head",
+        "name",
+        "owningProject",
+        "referencedCommit"
+      ],
+      "additionalProperties": false
+    },
+    "BranchRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/BranchRequest",
+      "title": "BranchRequest",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Branch"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "head": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+              "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "head",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Tag": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Tag",
+      "title": "Tag",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "Tag"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "owningProject": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Project"
+        },
+        "referencedCommit": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+        },
+        "taggedCommit": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "alias",
+        "created",
+        "deleted",
+        "description",
+        "name",
+        "owningProject",
+        "referencedCommit",
+        "taggedCommit"
+      ],
+      "additionalProperties": false
+    },
+    "TagRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/TagRequest",
+      "title": "TagRequest",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Tag"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "taggedCommit": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+        }
+      },
+      "required": [
+        "name",
+        "taggedCommit"
+      ],
+      "additionalProperties": false
+    },
+    "Commit": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit",
+      "title": "Commit",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "Commit"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "owningProject": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Branch"
+        },
+        "previousCommit": {
+          "type": "array",
+          "items": {
+            "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+            "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+          }
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "alias",
+        "created",
+        "description",
+        "name",
+        "owningProject",
+        "previousCommit"
+      ],
+      "additionalProperties": false
+    },
+    "CommitRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/CommitRequest",
+      "title": "CommitRequest",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Commit"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "change": {
+          "type": "array",
+          "items": {
+            "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataVersionRequest"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "change"
+      ],
+      "additionalProperties": false
+    },
+    "DataVersion": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataVersion",
+      "title": "DataVersion",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "DataVersion"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identity": {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataIdentity"
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "payload": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Data"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "alias",
+        "description",
+        "identity",
+        "name",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "DataVersionRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataVersionRequest",
+      "title": "DataVersionRequest",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "DataVersion"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "identity": {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataIdentityRequest"
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "payload": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataRequest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "Data": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Data",
+      "title": "Data",
+      "oneOf": [
+        {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Element"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalData"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalRelationship"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ProjectUsage"
+        }
+      ]
+    },
+    "DataRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataRequest",
+      "title": "DataRequest",
+      "oneOf": [
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ElementRequest"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalDataRequest"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalRelationshipRequest"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ProjectUsageRequest"
+        }
+      ]
+    },
+    "DataIdentity": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataIdentity",
+      "title": "DataIdentity",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "DataIdentity"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "alias",
+        "description",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "DataIdentityRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataIdentityRequest",
+      "title": "DataIdentityRequest",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "DataIdentity"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@id"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectUsage": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ProjectUsage",
+      "title": "ProjectUsage",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "ProjectUsage"
+        },
+        "usedCommit": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+        },
+        "usedProject": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Project"
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "usedCommit",
+        "usedProject"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectUsageRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ProjectUsageRequest",
+      "title": "ProjectUsageRequest",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "ProjectUsage"
+        },
+        "usedCommit": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Commit"
+        },
+        "usedProject": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Project"
+        }
+      },
+      "required": [
+        "@type"
+      ],
+      "additionalProperties": false
+    },
+    "ExternalData": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalData",
+      "title": "ExternalData",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "ExternalData"
+        },
+        "resourceIdentifier": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "resourceIdentifier"
+      ],
+      "additionalProperties": false
+    },
+    "ExternalDataRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalDataRequest",
+      "title": "ExternalDataRequest",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "ExternalData"
+        },
+        "resourceIdentifier": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "@type"
+      ],
+      "additionalProperties": false
+    },
+    "ExternalRelationship": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalRelationship",
+      "title": "ExternalRelationship",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "ExternalRelationship"
+        },
+        "elementEnd": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SysML/20230201/Element"
+        },
+        "externalDataEnd": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalData"
+        },
+        "language": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "specification": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "elementEnd",
+        "externalDataEnd",
+        "language",
+        "specification"
+      ],
+      "additionalProperties": false
+    },
+    "ExternalRelationshipRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalRelationshipRequest",
+      "title": "ExternalRelationshipRequest",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "ExternalRelationship"
+        },
+        "elementEnd": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SysML/20230201/Element"
+        },
+        "externalDataEnd": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ExternalData"
+        },
+        "language": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "specification": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@type"
+      ],
+      "additionalProperties": false
+    },
+    "DataDifference": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataDifference",
+      "title": "DataDifference",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "DataDifference"
+        },
+        "baseData": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataVersion"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "compareData": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/DataVersion"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@type",
+        "baseData",
+        "compareData"
+      ],
+      "additionalProperties": false
+    },
+    "Query": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Query",
+      "title": "Query",
+      "type": "object",
+      "properties": {
+        "@id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "@type": {
+          "type": "string",
+          "const": "Query"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "owningProject": {
+          "$ref": "https://www.omg.org/spec/SysML/20230201/Identified",
+          "$comment": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Project"
+        },
+        "select": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "where": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Constraint"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@id",
+        "@type",
+        "alias",
+        "description",
+        "name",
+        "owningProject",
+        "select",
+        "where"
+      ],
+      "additionalProperties": false
+    },
+    "QueryRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/QueryRequest",
+      "title": "QueryRequest",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Query"
+        },
+        "alias": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "select": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "where": {
+          "oneOf": [
+            {
+              "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ConstraintRequest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Constraint": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Constraint",
+      "title": "Constraint",
+      "oneOf": [
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/CompositeConstraint"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/PrimitiveConstraint"
+        }
+      ]
+    },
+    "ConstraintRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/ConstraintRequest",
+      "title": "ConstraintRequest",
+      "oneOf": [
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/CompositeConstraintRequest"
+        },
+        {
+          "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/PrimitiveConstraintRequest"
+        }
+      ]
+    },
+    "CompositeConstraint": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/CompositeConstraint",
+      "title": "CompositeConstraint",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "CompositeConstraint"
+        },
+        "constraint": {
+          "type": "array",
+          "items": {
+            "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Constraint"
+          },
+          "minItems": 2
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "and",
+            "or"
+          ]
+        }
+      },
+      "required": [
+        "@type",
+        "constraint",
+        "operator"
+      ],
+      "additionalProperties": false
+    },
+    "CompositeConstraintRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/CompositeConstraintRequest",
+      "title": "CompositeConstraintRequest",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "CompositeConstraint"
+        },
+        "constraint": {
+          "type": "array",
+          "items": {
+            "$ref": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Constraint"
+          },
+          "minItems": 2
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "and",
+            "or"
+          ]
+        }
+      },
+      "required": [
+        "@type",
+        "constraint",
+        "operator"
+      ],
+      "additionalProperties": false
+    },
+    "PrimitiveConstraint": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/PrimitiveConstraint",
+      "title": "PrimitiveConstraint",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "PrimitiveConstraint"
+        },
+        "inverse": {
+          "type": "boolean"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "<",
+            "<=",
+            "=",
+            ">",
+            ">=",
+            "in",
+            "instanceOf"
+          ]
+        },
+        "property": {
+          "type": "string"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "https://www.omg.org/spec/SysML/20230201/Identified"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minItems": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@type",
+        "inverse",
+        "operator",
+        "property",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "PrimitiveConstraintRequest": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/PrimitiveConstraint",
+      "title": "PrimitiveConstraint",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "PrimitiveConstraint"
+        },
+        "inverse": {
+          "type": "boolean"
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "<",
+            "<=",
+            "=",
+            ">",
+            ">=",
+            "in",
+            "instanceOf"
+          ]
+        },
+        "property": {
+          "type": "string"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "https://www.omg.org/spec/SysML/20230201/Identified"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minItems": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@type",
+        "operator",
+        "property",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "Error": {
+      "$id": "https://www.omg.org/spec/SystemsModelingAPI/20230201/Error",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Error"
+        },
+        "description": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "@type",
+        "description"
+      ],
+      "additionalProperties": true
+    }
+  }
+}

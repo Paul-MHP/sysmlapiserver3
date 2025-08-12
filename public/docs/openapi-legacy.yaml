@@ -1,0 +1,1468 @@
+swagger: "2.0"
+info:
+  title: SysML v2 API and Services
+  description: REST/HTTP binding (PSM) for the SysML v2 standard API.
+  version: 1.0.0
+tags:
+  - name: Project
+  - name: Branch
+  - name: Tag
+  - name: Commit
+  - name: Element
+  - name: Relationship
+  - name: Query
+  - name: Meta
+  - name: Extension
+
+paths:
+  /projects:
+    get:
+      parameters:
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Project
+      operationId: getProjects
+      summary: Get projects
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Project'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    post:
+      tags:
+        - Project
+      operationId: postProject
+      summary: Create project
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Project'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Project'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+    get:
+      tags:
+        - Project
+      operationId: getProjectById
+      summary: Get project by ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Project'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    put:
+      tags:
+        - Project
+      operationId: putProjectById
+      summary: Update project by ID
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/Project'
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Project'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    delete:
+      tags:
+        - Project
+      operationId: deleteProjectById
+      summary: Delete project by ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Project'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/branches:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Branch
+      operationId: getBranchesByProject
+      summary: Get branches by project
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Branch'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    post:
+      tags:
+        - Branch
+      operationId: postBranchByProject
+      summary: Create branch by project
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Branch'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Branch'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/branches/{branchId}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: branchId
+        in: path
+        description: ID of the branch
+        type: string
+        format: uuid
+        required: true
+    get:
+      tags:
+        - Branch
+      operationId: getBranchesByProjectAndId
+      summary: Get branch by project and ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Branch'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    delete:
+      tags:
+        - Branch
+      operationId: deleteBranchByProjectAndId
+      summary: Delete branch by project and ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Branch'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/tags:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Tag
+      operationId: getTagsByProject
+      summary: Get tags by project
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Tag'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    post:
+      tags:
+        - Tag
+      operationId: postTagByProject
+      summary: Create tag by project
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Tag'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Branch'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/tags/{tagId}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: tagId
+        in: path
+        description: ID of the tag
+        type: string
+        format: uuid
+        required: true
+    get:
+      tags:
+        - Tag
+      operationId: getTagByProjectAndId
+      summary: Get tag by project and ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Tag'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    delete:
+      tags:
+        - Tag
+      operationId: deleteTagByProjectAndId
+      summary: Delete tag by project and ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Tag'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/commits:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Commit
+      operationId: getCommitsByProject
+      summary: Get commits by project
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Commit'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    post:
+      tags:
+        - Commit
+      operationId: postCommitByProject
+      summary: Create commit by project
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Commit'
+        - name: branchId
+          in: query
+          description: ID of the branch - project's default branch if unspecified
+          type: string
+          format: uuid
+          required: false
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Commit'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/commits/{commitId}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: path
+        description: ID of the commit
+        type: string
+        format: uuid
+        required: true
+    get:
+      tags:
+        - Commit
+      operationId: getCommitByProjectAndId
+      summary: Get commit by project and ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Commit'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/commits/{commitId}/elements:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: path
+        description: ID of the commit
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: excludeUsed
+          in: query
+          description: Exclude elements from ProjectUsages
+          type: boolean
+          required: false
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Element
+      operationId: getElementsByProjectCommit
+      summary: Get elements by project and commit
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Element'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/commits/{commitId}/elements/{elementId}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: path
+        description: ID of the commit
+        type: string
+        format: uuid
+        required: true
+      - name: elementId
+        in: path
+        description: ID of the element
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: excludeUsed
+          in: query
+          description: Exclude elements from ProjectUsages
+          type: boolean
+          required: false
+      tags:
+        - Element
+      operationId: getElementByProjectCommitId
+      summary: Get element by project, commit and ID
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Element'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/commits/{commitId}/roots:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: path
+        description: ID of the commit
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: excludeUsed
+          in: query
+          description: Exclude elements from ProjectUsages
+          type: boolean
+          required: false
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Element
+      operationId: getRootsByProjectCommit
+      summary: Get root elements by project and commit
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Element'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/commits/{commitId}/elements/{relatedElementId}/relationships:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: path
+        description: ID of the commit
+        type: string
+        format: uuid
+        required: true
+      - name: relatedElementId
+        in: path
+        description: ID of the related element
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: direction
+          in: query
+          description: Filter for relationships that are incoming (in), outgoing (out), or both relative to the related element
+          type: string
+          enum:
+            - 'in'
+            - 'out'
+            - 'both'
+          default: 'both'
+          required: false
+        - name: excludeUsed
+          in: query
+          description: Exclude relationships from ProjectUsages
+          type: boolean
+          required: false
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Relationship
+      operationId: getRelationshipsByProjectCommitRelatedElement
+      summary: Get relationships by project, commit, and related element
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Relationship'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/queries:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+    get:
+      parameters:
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Query
+      operationId: getQueriesByProject
+      summary: Get queries by project
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Query'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    post:
+      tags:
+        - Query
+      operationId: postQueryByProject
+      summary: Create query by project
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Query'
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Query'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/queries/{queryId}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: queryId
+        in: path
+        description: ID of the query
+        type: string
+        format: uuid
+        required: true
+    get:
+      tags:
+        - Query
+      operationId: getQueryByProjectAndId
+      summary: Get query by project and ID
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Query'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    delete:
+      tags:
+        - Query
+      operationId: deleteQueryByProjectAndId
+      summary: Delete query by project and ID
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Query'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/queries/{queryId}/results:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: queryId
+        in: path
+        description: ID of the query
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: query
+        description: ID of the commit - defaults to head of project
+        type: string
+        format: uuid
+        required: false
+    get:
+      tags:
+        - Query
+      operationId: getQueryResultsByProjectIdQueryId
+      summary: Get query results by project and query
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Element'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /projects/{projectId}/query-results:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: query
+        description: ID of the commit - defaults to head of project
+        type: string
+        format: uuid
+        required: false
+    get:
+      tags:
+        - Query
+      operationId: getQueryResultsByProjectIdQuery
+      summary: Get query results by project and query definition
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Query'
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Element'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+    post:
+      tags:
+        - Query
+      operationId: getQueryResultsByProjectIdQueryPost
+      summary: Get query results by project and query definition via POST
+      description: For compatibility with clients that don't support GET requests with a body
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Query'
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Element'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /meta/datatypes:
+    get:
+      parameters:
+        - name: page[after]
+          in: query
+          description: Page after
+          type: string
+          required: false
+        - name: page[before]
+          in: query
+          description: Page before
+          type: string
+          required: false
+        - name: page[size]
+          in: query
+          description: Page size
+          type: integer
+          required: false
+      tags:
+        - Meta
+      operationId: getDatatypes
+      summary: Get datatypes
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: object
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /meta/datatypes/{datatypeId}:
+    get:
+      parameters:
+        - name: datatypeId
+          in: path
+          description: ID of the datatype
+          type: string
+          format: uri
+          required: true
+      tags:
+        - Meta
+      operationId: getDataTypeById
+      summary: Get types by ID
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Ok
+          schema:
+            type: object
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /x/named/projects/{projectId}/commits:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+    post:
+      tags:
+        - Extension
+      operationId: postCommitByProjectNameResolved
+      summary: Create commit by project, resolving references by qualified name
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/ld+json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Commit'
+        - name: branchId
+          in: query
+          description: ID of the branch - project's default branch if unspecified
+          type: string
+          format: uuid
+          required: false
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Commit'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+  /x/named/projects/{projectId}/commits/{commitId}/elements/{qualifiedName}:
+    parameters:
+      - name: projectId
+        in: path
+        description: ID of the project
+        type: string
+        format: uuid
+        required: true
+      - name: commitId
+        in: path
+        description: ID of the commit
+        type: string
+        format: uuid
+        required: true
+      - name: qualifiedName
+        in: path
+        description: Qualified name of the element
+        type: string
+        required: true
+    get:
+      tags:
+        - Extension
+      operationId: getElementByProjectCommitQualifiedName
+      summary: Get element by project, commit and qualified name
+      produces:
+        - application/json
+        - application/ld+json
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/Element'
+        404:
+          $ref: '#/responses/NotFound'
+        415:
+          $ref: '#/responses/BadContentType'
+        500:
+          $ref: '#/responses/InternalServerError'
+        default:
+          $ref: '#/responses/Default'
+definitions:
+  Project:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format: uuid
+      '@type':
+        type: string
+        enum:
+          - 'Project'
+      defaultBranch:
+        description: Branch
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      description:
+        type: string
+      name:
+        type: string
+  Branch:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+        enum:
+          - 'Branch'
+      head:
+        description: Commit
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      name:
+        type: string
+      owningProject:
+        description: Project
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      referencedCommit:
+        description: Commit
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      timestamp:
+        type: string
+        format: date-time
+  Tag:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+        enum:
+          - 'Tag'
+      name:
+        type: string
+      owningProject:
+        description: Project
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      referencedCommit:
+        description: Commit
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      taggedCommit:
+        description: Commit
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      timestamp:
+        type: string
+        format: date-time
+  Commit:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+        enum:
+          - 'Commit'
+      change:
+        type: array
+        items:
+          $ref: '#/definitions/DataVersion'
+      owningProject:
+        description: Project
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      previousCommit:
+        description: array(Commit)
+        type: array
+        items:
+          description: Commit
+          type: object
+          properties:
+            '@id':
+              type: string
+              format: uuid
+  DataVersion:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+        enum:
+          - 'DataVersion'
+      payload:
+        $ref: '#/definitions/Data'
+      identity:
+        $ref: '#/definitions/DataIdentity'
+  DataIdentity:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+        enum:
+          - 'DataIdentity'
+  Data:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format: uuid
+      '@type':
+        type: string
+    additionalProperties:
+      type: object
+    discriminator: '@type'
+    required:
+      - '@type'
+  Identified:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format: uuid
+  Element:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+      elementId:
+        type: string
+        format: uuid
+    additionalProperties:
+      type: object
+  Relationship:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+      elementId:
+        type: string
+        format: uuid
+      source:
+        type: array
+        items:
+          $ref: '#/definitions/Identified'
+      target:
+        type: array
+        items:
+          $ref: '#/definitions/Identified'
+  Query:
+    type: object
+    properties:
+      '@id':
+        type: string
+        format:
+          uuid
+      '@type':
+        type: string
+        enum:
+          - 'Query'
+      owningProject:
+        description: Project
+        type: object
+        properties:
+          '@id':
+            type: string
+            format: uuid
+      # orderBy:
+      #   type: array
+      #   items:
+      #     type: string
+      scope:
+        type: array
+        items:
+          $ref: '#/definitions/DataIdentity'
+      select:
+        type: array
+        items:
+          type: string
+      where:
+        $ref: '#/definitions/Constraint'
+  Constraint:
+    type: object
+    properties:
+      '@type':
+        type: string
+        enum:
+          - 'PrimitiveConstraint'
+          - 'CompositeConstraint'
+    additionalProperties:
+      type: object
+    discriminator: '@type'
+    required:
+      - '@type'
+  PrimitiveConstraint:
+    type: object
+    properties:
+      '@type':
+        type: string
+        enum:
+          - 'PrimitiveConstraint'
+      inverse:
+        type: boolean
+      property:
+        type: string
+      value:
+        type: string
+      operator:
+        type: string
+        enum:
+          - '='
+          - '>'
+          - '<'
+  CompositeConstraint:
+    type: object
+    properties:
+      '@type':
+        type: string
+        enum:
+          - 'CompositeConstraint'
+      constraint:
+        type: array
+        items:
+          $ref: '#/definitions/Constraint'
+      operator:
+        type: string
+        enum:
+          - 'and'
+          - 'or'
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+responses:
+  NoContent:
+    description: No Content
+  Ok:
+    description: Ok
+  BadContentType:
+    description: The requested content type is not acceptable.
+    schema:
+      $ref: '#/definitions/Error'
+  NotFound:
+    description: Not found.
+  InternalServerError:
+    description: Internal server error.
+    schema:
+      $ref: '#/definitions/Error'
+  Default:
+    description: Unexpected response.

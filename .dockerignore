@@ -1,0 +1,53 @@
+# Build artifacts
+target/
+*.log
+logs/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.metals/
+.bloop/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker files (to avoid copying into the image)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+*.md
+docs/
+
+# Test files
+test/
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# SBT specific
+project/target/
+project/project/
+
+# Local configuration that shouldn't be in the image
+conf/application-local.conf
+
+# Generated files that will be regenerated
+generated/
+
+# Node modules if any
+node_modules/
+
+# Environment files
+.env
+.env.local
