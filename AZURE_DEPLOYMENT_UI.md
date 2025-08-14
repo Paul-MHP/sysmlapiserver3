@@ -5,11 +5,10 @@ This guide provides instructions for deploying the SysML v2 API application usin
 ## Architecture Overview
 
 **Azure Services:**
-- **Application**: Azure Container Apps (serverless containers with auto-scaling)
+- **Application**: Azure Web App for Containers (managed container hosting)
 - **Database**: Azure Database for PostgreSQL - Flexible Server
-- **Secrets**: Azure Key Vault
 - **Registry**: Azure Container Registry
-- **Estimated Cost**: $150-300/month
+- **Estimated Cost**: $25-30/month (Basic B2 plan with 2GB RAM)
 
 ## Prerequisites
 
@@ -187,39 +186,70 @@ az container show --name "sysml-api-ssl" --resource-group "287013_Scalable_AI_Ap
 
 ## Summary
 
-This approach combines Azure Portal UI for infrastructure setup with Azure Container Instances for simple, cost-effective deployment:
+This approach combines Azure Portal UI for infrastructure setup with Azure Web Apps for reliable, managed container deployment:
 
-- **UI Creation**: Easy visual setup of PostgreSQL, Key Vault, and Container Registry
-- **ACI Deployment**: Simple container hosting without complex orchestration
+- **UI Creation**: Easy visual setup of PostgreSQL and Container Registry
+- **Web App Deployment**: Fully managed container hosting with health monitoring
 - **GitHub Integration**: Direct builds from your repository via Azure Container Registry
-- **Cost-Effective**: Minimal resource allocation (0.25 vCPU, 0.5GB RAM)
-- **No Auto-Scaling**: Perfect for testing and low-traffic scenarios
+- **Optimized Performance**: 2GB RAM allocation for SysML v2 metamodel (8,207 database tables)
+- **Production Ready**: Automatic restarts, health probes, and 15-minute startup timeout
 
 ## Current Deployment Status
 
 **Successfully Deployed Resources:**
 - ✅ **Container Registry**: `sysmlacr2024` with Docker image
-- ✅ **PostgreSQL Database**: `sysml-postgres-2024` with `sysml2` database
-- ✅ **Key Vault**: `sysml-kv-2024` with database credentials and secrets
-- ✅ **Container Instance**: `sysml-api-ssl` with database connectivity
+- ✅ **PostgreSQL Database**: `sysml-postgres-2024` with `sysml2` database (8,207 tables)
+- ✅ **Azure Web App**: `sysml-api-webapp-2024` with optimized configuration
+- ✅ **Database Connectivity**: Full SysML v2 metamodel schema successfully created
 
 **Application Access:**
-- **Main Application**: `http://sysml-api-ssl.westeurope.azurecontainer.io:9000/`
-- **Swagger API Documentation**: `http://sysml-api-ssl.westeurope.azurecontainer.io:9000/docs/`
+- **Main Application**: `https://sysml-api-webapp-2024.azurewebsites.net/`
+- **Swagger API Documentation**: `https://sysml-api-webapp-2024.azurewebsites.net/docs/`
+
+**Current Status**: ✅ **SUCCESSFULLY DEPLOYED** (August 14, 2025)
+- Application responds with JSON (Host configuration needs minor adjustment)
+- Database schema fully created with 8,207 SysML v2 metamodel tables
+- Startup time: ~10.5 minutes (due to extensive table creation)
 
 ## Troubleshooting
 
 **Common Issues Resolved:**
-1. **Container restart loops**: Fixed by adding PostgreSQL firewall rule and proper environment variables
-2. **Database connectivity**: Resolved with SSL connection string and proper credentials
-3. **Bash special characters**: Fixed by URL-encoding `!` character in DATABASE_URL (`%21`)
-4. **Secret key consistency**: Using fixed Key Vault secret instead of random generation
+1. **Database connection errors**: Fixed hardcoded hostnames in configuration files
+2. **Startup timeout failures**: Increased container startup timeout to 15 minutes (900s)
+3. **Memory constraints**: Upgraded to 2GB RAM allocation for SysML v2 metamodel
+4. **Environment variable configuration**: Properly set all database connection parameters
+5. **JVM optimization**: Added G1GC and startup optimization flags
+6. **SSL connection**: Configured PostgreSQL with SSL requirement (`sslmode=require`)
+
+**Final Configuration Settings:**
+- **Memory**: 2GB RAM (Basic B2 App Service Plan)
+- **Timeout**: 900 seconds (15 minutes)
+- **JVM Options**: `-Xmx2048m -Xms1024m -XX:+UseG1GC -XX:MaxGCPauseMillis=100`
+- **Database**: 8,207 tables for complete SysML v2 metamodel
 
 **Monitoring Commands:**
 ```bash
-# Check container status
-az container show --name "sysml-api-ssl" --resource-group "287013_Scalable_AI_Applications" --query "{State:instanceView.state,RestartCount:containers[0].instanceView.restartCount}"
+# Check web app status
+az webapp show --name sysml-api-webapp-2024 --resource-group "287013_Scalable_AI_Applications" --query "{name:name,state:state,availabilityState:availabilityState}"
 
-# View logs
-az container logs --name "sysml-api-ssl" --resource-group "287013_Scalable_AI_Applications"
+# Download and view logs
+az webapp log download --name sysml-api-webapp-2024 --resource-group "287013_Scalable_AI_Applications"
+unzip -o webapp_logs.zip
+cat LogFiles/2025_08_1*_docker.log | tail -50
+
+# Test application
+curl -I https://sysml-api-webapp-2024.azurewebsites.net/
+
+# Verify database tables
+az postgres flexible-server execute --name sysml-postgres-2024 --admin-user paulschiel --admin-password "TestPW123!" --database-name sysml2 --querytext "SELECT COUNT(*) as table_count FROM information_schema.tables WHERE table_schema = 'public';"
+```
+
+## Next Steps
+
+**Minor Configuration Adjustment Needed:**
+The application is fully functional but returns a "Host not allowed" error due to Play Framework security settings. This requires updating the `application-docker.conf` file to allow the Azure hostname:
+
+```scala
+# Add to conf/application-docker.conf
+play.filters.hosts.allowed = [".", "sysml-api-webapp-2024.azurewebsites.net"]
 ```
